@@ -70,7 +70,7 @@ node src/server/index.js
 # 2) 官网（:3100）
 cd ../downgrader-site
 npm install
-npm run dev            # http://127.0.0.1:3100 → 自动跳 /zh
+npm run dev            # http://127.0.0.1:3100 → 按 IP / 浏览器语言自动跳 /zh 或 /en
 ```
 
 引擎地址可通过环境变量覆盖（默认 `http://127.0.0.1:8788`）：
@@ -87,7 +87,7 @@ ENGINE_URL=https://engine.example.com npm run dev
 
 | 路径 | 作用 |
 | --- | --- |
-| `/` | 307 → `/zh` |
+| `/` | 307 → 中文 IP / 浏览器语言跳 `/zh`，其它跳 `/en` |
 | `/{lang}` | 首页：首屏、版本跑马灯、关键数字、两大转换器、三步流程、使用场景、问答、结尾号召 |
 | `/{lang}/premiere-pro-downgrader` | **真实可用的转换器** + 14 版对照表 + 降级代价说明 |
 | `/{lang}/after-effects-downgrader` | **真实可用的转换器**（内嵌，全本地）+ 9 版对照表 + 两条线为何不同 |
@@ -272,7 +272,7 @@ npm run build && npm start
 - `ENGINE_URL` 指向线上引擎；引擎可部署在 Cloudflare Workers 一类无状态环境。
 - **AE 转换器不依赖引擎**：只要静态资源可访问（含 `public/wasm/` 两个文件）就能工作，
   因此它在纯静态托管下也能跑。
-- `next.config.mjs` 里的 `/` → `/zh` 跳转是配置级跳转，不依赖页面。
+- `proxy.js` 会按地区 IP 与浏览器语言把无语言前缀 URL 自动补到 `/zh` 或 `/en`。
 - 务必确认托管环境返回 `aep_core_bg.wasm` 的 MIME 为 `application/wasm`
   （`test/e2e.js` 有一条断言守着）。
 

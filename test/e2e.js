@@ -68,7 +68,24 @@ const PAGES = [
 console.log('\n【1】页面渲染');
 
 const root = await get('/');
-check('/ 重定向到 /zh', root.res.status === 307 && root.res.headers.get('location') === '/zh');
+check('/ 默认重定向到 /en', root.res.status === 307 && root.res.headers.get('location') === '/en');
+
+const zhRoot = await get('/', { headers: { 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8' } });
+check('中文浏览器重定向到 /zh', zhRoot.res.status === 307 && zhRoot.res.headers.get('location') === '/zh');
+
+const enPrimaryRoot = await get('/', { headers: { 'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.6' } });
+check('非中文首选语言重定向到 /en', enPrimaryRoot.res.status === 307 && enPrimaryRoot.res.headers.get('location') === '/en');
+
+const zhIpRoot = await get('/', { headers: { 'x-vercel-ip-country': 'CN' } });
+check('中文地区 IP 重定向到 /zh', zhIpRoot.res.status === 307 && zhIpRoot.res.headers.get('location') === '/zh');
+
+const unprefixed = await get('/premiere-pro-downgrader', {
+  headers: { 'Accept-Language': 'en-US,en;q=0.9' },
+});
+check(
+  '无语言前缀页面自动补 /en',
+  unprefixed.res.status === 307 && unprefixed.res.headers.get('location') === '/en/premiere-pro-downgrader'
+);
 
 for (const [pathname, needles] of PAGES) {
   try {
