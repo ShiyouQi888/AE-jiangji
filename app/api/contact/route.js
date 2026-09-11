@@ -4,6 +4,8 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const CONTACT_TO = process.env.CONTACT_TO || 'shijuebaba@gmail.com';
+const DEFAULT_SMTP_HOST = 'smtp.gmail.com';
+const DEFAULT_SMTP_PORT = 465;
 const MAX_MESSAGE = 5000;
 const MAX_FIELD = 240;
 const WINDOW_MS = 10 * 60 * 1000;
@@ -34,12 +36,12 @@ function rateLimited(key) {
 }
 
 function transportConfig() {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  if (!host || !user || !pass) return null;
+  const user = process.env.SMTP_USER || (CONTACT_TO.endsWith('@gmail.com') ? CONTACT_TO : '');
+  const pass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_APP_PASS;
+  if (!user || !pass) return null;
 
-  const port = Number(process.env.SMTP_PORT || 465);
+  const host = process.env.SMTP_HOST || DEFAULT_SMTP_HOST;
+  const port = Number(process.env.SMTP_PORT || DEFAULT_SMTP_PORT);
   return {
     host,
     port,
@@ -95,11 +97,15 @@ export async function POST(request) {
 
   const config = transportConfig();
   if (!config) {
+    console.warn('Contact email delivery is not configured.', {
+      hasSmtpUser: Boolean(process.env.SMTP_USER || CONTACT_TO.endsWith('@gmail.com')),
+      hasSmtpPass: Boolean(process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_APP_PASS),
+    });
     return Response.json({ ok: false, error: 'Email delivery is not configured.' }, { status: 503 });
   }
 
   const transporter = nodemailer.createTransport(config);
-  const from = process.env.SMTP_FROM || process.env.SMTP_USER;
+  const from = process.env.SMTP_FROM || `AEBack <${config.auth.user}>`;
 
   try {
     await transporter.sendMail({
@@ -109,7 +115,12 @@ export async function POST(request) {
       subject: `[AEBack] ${data.type} - ${data.name}`,
       text: textBody(data),
     });
-  } catch {
+  } catch (err) {
+    console.error('Contact email delivery failed.', {
+      code: err?.code,
+      command: err?.command,
+      responseCode: err?.responseCode,
+    });
     return Response.json({ ok: false, error: 'Email delivery failed.' }, { status: 502 });
   }
 
