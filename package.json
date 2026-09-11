@@ -15,6 +15,7 @@
     "test:ae": "node test/aep-core.test.mjs",
     "test:browser": "node test/browser-flow.js",
     "test:browser:ae": "node test/browser-flow-ae.js",
+    "test:nav": "node test/reveal-navigation.js",
     "test:layout": "node test/layout-audit.js",
     "test:align": "node test/faq-align.mjs",
     "test:content": "node test/content-shape.mjs",
@@ -22,7 +23,7 @@
     "test:noleak": "node test/no-leak.mjs",
     "test:flat": "node test/no-gradient.mjs",
     "test:seo": "node test/seo.mjs",
-    "test:all": "npm run test:content && npm run test:copy && npm run test:noleak && npm run test:flat && npm run test:seo && npm run test:ae && npm run test && npm run test:browser && npm run test:browser:ae && npm run test:layout && npm run test:align",
+    "test:all": "npm run test:content && npm run test:copy && npm run test:noleak && npm run test:flat && npm run test:seo && npm run test:ae && npm run test && npm run test:browser && npm run test:browser:ae && npm run test:nav && npm run test:layout && npm run test:align",
     "assets": "python test/assets.py",
     "shots": "node test/shots.js"
   },

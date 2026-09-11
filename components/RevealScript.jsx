@@ -1,13 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 /**
  * 滚动进场：给根元素加 .js-reveal 后，逐批把 .reveal 元素点亮。
  * 用「先有内容、后有动画」的顺序，禁用 JS 时内容依然可见。
  */
 export default function RevealScript() {
-  useEffect(() => {
+  const pathname = usePathname();
+
+  useLayoutEffect(() => {
     const root = document.documentElement;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced || !('IntersectionObserver' in window)) return;
@@ -35,11 +38,18 @@ export default function RevealScript() {
       );
       const order = Math.max(0, siblings.indexOf(el));
       el.style.transitionDelay = `${Math.min(order, 5) * 65}ms`;
+
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.94 && rect.bottom > 0) {
+        el.classList.add('in');
+        continue;
+      }
+
       io.observe(el);
     }
 
     return () => io.disconnect();
-  }, []);
+  }, [pathname]);
 
   return null;
 }
