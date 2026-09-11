@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { AeIcon, PrIcon } from '@/components/AdobeIcons';
+import ConversionCounter from '@/components/ConversionCounter';
 import Faq from '@/components/Faq';
 import Marquee from '@/components/Marquee';
 import {
@@ -92,10 +93,14 @@ export default async function HomePage({ params }) {
         <div className="wrap">
           <div className="stats reveal">
             {h.stats.map((s) => (
-              <div className="stat" key={s.l}>
-                <p className="stat__v accent-text">{s.v}</p>
-                <p className="stat__l">{s.l}</p>
-              </div>
+              s.v === 'counter' ? (
+                <ConversionCounter key={s.l} label={s.l} lang={lang} />
+              ) : (
+                <div className="stat" key={s.l}>
+                  <p className="stat__v accent-text">{s.v}</p>
+                  <p className="stat__l">{s.l}</p>
+                </div>
+              )
             ))}
           </div>
         </div>
