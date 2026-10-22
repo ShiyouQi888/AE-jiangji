@@ -139,7 +139,7 @@ await eachLimited(EXPECTED, 6, async (path) => {
   /* — 标题 — */
   // 上限按"不被搜索结果截断"来定：拉丁文约 60~70 字符，中日韩约 30 字。
   // 中文标题短是正常的（一个字的信息量比一个字母大），所以下限放到 10。
-  const title = html.match(/<title>([^<]*)<\/title>/)?.[1] || '';
+  const title = (html.match(/<title>([^<]*)<\/title>/)?.[1] || '').replace(/&amp;/g, '&');
   check(`标题非空 ${path}`, title.length > 0);
   check(`标题长度合规 ${path}`, title.length >= 10 && title.length <= 70, `${title.length} 字：${title}`);
   if (title) {
@@ -369,6 +369,30 @@ for (const [path, phrases] of queryCoverage) {
   for (const phrase of phrases) {
     check(`${path} 覆盖查询「${phrase}」`, searchable.includes(phrase.toLowerCase()), phrase);
   }
+}
+
+/* ─────────── 13. 高意图落地页的搜索摘要 ─────────── */
+
+console.log('\n【13】高意图落地页摘要');
+
+const searchSnippets = [
+  ['/en', 'Premiere Pro & After Effects Project Downgrader | AEBack', 'CS6–2026'],
+  ['/en/premiere-pro-downgrader', 'Premiere Pro Project Downgrader Online | AEBack', 'never overwritten'],
+  ['/en/after-effects-downgrader', 'AEP Downgrader Online for After Effects Projects | AEBack', 'files stay on your device'],
+  ['/zh/premiere-pro-downgrader', 'PR降级工具：Premiere Pro 工程降到旧版本 | AEBack', '14 个目标版本'],
+  ['/zh/after-effects-downgrader', 'AE降级工具：After Effects .aep 工程降到旧版本 | AEBack', '浏览器本地处理'],
+];
+
+for (const [path, expectedTitle, expectedDescription] of searchSnippets) {
+  const html = await (await fetch(`${SITE}${path}`, { cache: 'no-store' })).text();
+  const title = (html.match(/<title>([^<]*)<\/title>/)?.[1] || '').replace(/&amp;/g, '&');
+  const description = html.match(/<meta name="description" content="([^"]*)"/)?.[1] || '';
+  check(`${path} 搜索标题聚焦目标查询`, title === expectedTitle, title);
+  check(
+    `${path} 搜索摘要包含决策信息`,
+    description.includes(expectedDescription),
+    expectedDescription
+  );
 }
 
 /* ─────────── 汇总 ─────────── */
