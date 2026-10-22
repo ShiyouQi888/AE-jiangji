@@ -9,3 +9,4 @@ _npmcache/
 .DS_Store
 
 .vercel
+.workbuddy/

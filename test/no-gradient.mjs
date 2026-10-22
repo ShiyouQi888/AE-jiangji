@@ -33,7 +33,7 @@ function walk(dir, out = []) {
 const ALLOWED = [
   // body 的网格纹理：1px 硬停靠，画的是线不是色块
   { file: 'app/globals.css', re: /background-image:\s*linear-gradient\(rgba\(255, 255, 255, 0\.026\) 1px, transparent 1px\),?/, why: '网格纹理（1px 硬停靠）' },
-  { file: 'app/globals.css', re: /^\s*linear-gradient\(90deg, rgba\(255, 255, 255, 0\.026\) 1px, transparent 1px\);$/, why: '网格纹理（1px 硬停靠）' },
+  { file: 'app/globals.css', re: /^\s*linear-gradient\(90deg, rgba\(255, 255, 255, 0\.026\) 1px, transparent 1px\);\r?$/, why: '网格纹理（1px 硬停靠）' },
 ];
 
 /** mask-image 里出现 gradient 属正常：遮的是不透明度 */

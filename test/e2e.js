@@ -49,8 +49,10 @@ async function get(pathname, init) {
 /* ────────────────────── 1. 页面渲染 ────────────────────── */
 
 const PAGES = [
-  ['/zh', ['aeback', '降级', '累计完成文件转换']],
-  ['/en', ['aeback', 'Downgrade', 'files converted so far']],
+  ['/zh', ['aeback', '降级', '目标版本']],
+  ['/en', ['aeback', 'Downgrade', 'target versions']],
+  ['/zh/about', ['关于 AEBack', '两种工程格式']],
+  ['/en/about', ['About AEBack', 'Two formats']],
   ['/zh/premiere-pro-downgrader', ['目标版本']],
   ['/en/premiere-pro-downgrader', ['Target version']],
   ['/zh/after-effects-downgrader', ['After Effects', '拖入 .aep', '9 个目标版本']],

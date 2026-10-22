@@ -21,11 +21,13 @@ const PATHS = [
   '/zh/how-it-works',
   '/zh/faq',
   '/zh/contact',
+  '/zh/about',
   '/zh/privacy',
   '/zh/terms',
   '/en',
   '/en/premiere-pro-downgrader',
   '/en/contact',
+  '/en/about',
   // 长尾落地页：事实表与步骤条是独有的版式，窄屏最容易溢出，必须一起量
   '/zh/premiere-pro-downgrader/to/cs6',
   '/zh/guide/what-gets-lost',

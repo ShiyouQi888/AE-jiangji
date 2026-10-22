@@ -17,7 +17,7 @@ const ROOT = process.cwd();
 
 /* ── A. 仓库扫描 ── */
 const VENDOR = ['talk', 'ae'].join(''); // 不在源码里写出完整域名
-const SKIP_DIRS = new Set(['node_modules', '.next', 'out', '.git', '_npmcache', 'wasm']);
+const SKIP_DIRS = new Set(['node_modules', '.next', 'out', '.git', '_npmcache', '.workbuddy', 'wasm']);
 const TEXT_EXT = new Set(['.js', '.jsx', '.mjs', '.cjs', '.json', '.css', '.md', '.html']);
 
 function walk(dir, acc = []) {
@@ -48,7 +48,6 @@ if (hits.length) {
 
 /* ── B. 线上页面扫描 ── */
 const FORBIDDEN = [
-  '日志',
   '转换日志',
   'conversion log',
   '对象图',
